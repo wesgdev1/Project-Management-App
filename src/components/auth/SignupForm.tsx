@@ -7,6 +7,7 @@ import {
 } from "@radix-ui/react-icons";
 import { Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { useForm, Controller } from "react-hook-form";
+import axios from "axios";
 
 export const SignupForm = () => {
   const {
@@ -22,7 +23,11 @@ export const SignupForm = () => {
     },
   });
 
-  const onSubmit = handleSubmit((data) => console.log(data));
+  const onSubmit = handleSubmit(async (data) => {
+    console.log(data);
+    const res = await axios.post("http://localhost:3000/api/register", data);
+    console.log(res);
+  });
 
   return (
     <form onSubmit={onSubmit}>
