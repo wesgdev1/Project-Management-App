@@ -5,8 +5,10 @@ import {
   MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
 import { Button, Flex, Text, TextField } from "@radix-ui/themes";
+import { signIn } from "next-auth/react";
 
 import { useForm, Controller } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 export const SigninForm = () => {
   const {
@@ -20,8 +22,21 @@ export const SigninForm = () => {
       password: "",
     },
   });
+  const router = useRouter();
 
-  const onSubmit = handleSubmit((data) => console.log(data));
+  const onSubmit = handleSubmit(async (data) => {
+    const res = await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
+
+    if (!res?.ok) {
+      console.log(res);
+    }
+
+    router.push("/dashboard");
+  });
 
   return (
     <form onSubmit={onSubmit}>
