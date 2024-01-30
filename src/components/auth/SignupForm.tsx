@@ -8,6 +8,8 @@ import {
 import { Button, Flex, Text, TextField } from "@radix-ui/themes";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export const SignupForm = () => {
   const {
@@ -23,10 +25,25 @@ export const SignupForm = () => {
     },
   });
 
+  const router = useRouter();
+
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
     const res = await axios.post("http://localhost:3000/api/register", data);
     console.log(res);
+
+    if (res.status === 201) {
+      const result = await signIn("credentials", {
+        email: res.data.email,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (!result?.ok) {
+        console.log(result?.error);
+        return;
+      }
+      router.push("/dashboard");
+    }
   });
 
   return (
