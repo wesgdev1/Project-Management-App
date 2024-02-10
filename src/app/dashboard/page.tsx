@@ -1,7 +1,21 @@
+"use client";
+import { Button, Container, Heading } from "@radix-ui/themes";
+import { useRouter } from "next/navigation";
+
 export default function DashboardPage() {
+  const router = useRouter();
   return (
-    <div>
-      <h1>Hello Dasboard</h1>
-    </div>
+    <Container className="mt-10">
+      <div className="flex justify-between">
+        <Heading>Tasks</Heading>
+        <Button
+          onClick={() => {
+            router.push("/dashboard/tasks/new");
+          }}
+        >
+          Add Task
+        </Button>
+      </div>
+    </Container>
   );
 }
