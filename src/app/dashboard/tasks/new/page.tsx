@@ -9,9 +9,15 @@ import {
   Button,
 } from "@radix-ui/themes";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
+import { useParams } from "next/navigation";
+import { TrashIcon } from "@radix-ui/react-icons";
 
 export default function TaskNewPage() {
+  const router = useRouter();
+  const params = useParams();
+  console.log(params);
   const { control, handleSubmit } = useForm({
     values: {
       title: "",
@@ -20,9 +26,15 @@ export default function TaskNewPage() {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
-    const res = await axios.post("http://localhost:3000/api/projects", data);
-    console.log(res);
+    if (!params.projectId) {
+      const res = await axios.post("http://localhost:3000/api/projects", data);
+      if (res.status === 201) {
+        router.push("/dashboard");
+        router.refresh();
+      }
+    } else {
+      console.log("edit project");
+    }
   });
 
   return (
@@ -30,7 +42,9 @@ export default function TaskNewPage() {
       <Flex className="h-screen w-full items-center">
         <Card className="w-full p-7">
           <form className="flex flex-col gap-3" onSubmit={onSubmit}>
-            <Heading>Create project</Heading>
+            <Heading>
+              {params.projectId ? "Edit project" : "Create new project"}
+            </Heading>
             <label>Project title</label>
             <Controller
               name="title"
@@ -61,9 +75,17 @@ export default function TaskNewPage() {
               }}
             />
             <Button type="submit" mt="5">
-              Create project
+              {params.projectId ? "Edit project" : "Create project"}
             </Button>
           </form>
+          <div className="flex justify-end">
+            {params.projectId && (
+              <Button mt="5" color="red" variant="surface">
+                <TrashIcon />
+                Delete project
+              </Button>
+            )}
+          </div>
         </Card>
       </Flex>
     </Container>
