@@ -11,7 +11,7 @@ export default function LoginPage() {
             <Heading>SignIn</Heading>
             <SigninForm />
             <Flex justify="between" my="4">
-              <Text>Don´t hace a account?</Text>
+              <Text>Don´t have a account?</Text>
               <Link asChild>
                 <NavLink href="/auth/register">Sign Up</NavLink>
               </Link>
