@@ -6,13 +6,13 @@ export default function HeaderDashboard() {
   const router = useRouter();
   return (
     <div className="flex justify-between p-6">
-      <Heading>Tasks</Heading>
+      <Heading>Projects</Heading>
       <Button
         onClick={() => {
           router.push("/dashboard/tasks/new");
         }}
       >
-        Add Task
+        Add Project
       </Button>
     </div>
   );

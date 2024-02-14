@@ -13,12 +13,14 @@ import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { useParams } from "next/navigation";
 import { TrashIcon } from "@radix-ui/react-icons";
+import { toast } from "sonner";
+import { useEffect } from "react";
 
 export default function TaskNewPage() {
   const router = useRouter();
   const params = useParams();
   console.log(params);
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, setValue } = useForm({
     values: {
       title: "",
       description: "",
@@ -33,9 +35,39 @@ export default function TaskNewPage() {
         router.refresh();
       }
     } else {
-      console.log("edit project");
+      const res = await axios.put(
+        `http://localhost:3000/api/projects/${params.projectId}`,
+        data
+      );
+      if (res.status === 200) {
+        router.push("/dashboard");
+        router.refresh();
+      }
     }
   });
+
+  const handleDelete = async (ProjectId: string) => {
+    const res = await axios.delete(
+      `http://localhost:3000/api/projects/${ProjectId}`
+    );
+    if (res.status === 200) {
+      toast.success("Project deleted");
+      router.push("/dashboard");
+      router.refresh();
+    }
+  };
+  useEffect(() => {
+    console.log("por el efecct");
+    if (params.projectId) {
+      const res = axios
+        .get(`http://localhost:3000/api/projects/${params.projectId}`)
+        .then((res) => {
+          console.log(res.data);
+          setValue("title", res.data.title);
+          setValue("description", res.data.description);
+        });
+    }
+  }, []);
 
   return (
     <Container className="p-3 md:p-0" size="2" height="100%">
@@ -80,7 +112,14 @@ export default function TaskNewPage() {
           </form>
           <div className="flex justify-end">
             {params.projectId && (
-              <Button mt="5" color="red" variant="surface">
+              <Button
+                mt="5"
+                color="red"
+                variant="surface"
+                onClick={() => {
+                  handleDelete(params.projectId as string);
+                }}
+              >
                 <TrashIcon />
                 Delete project
               </Button>

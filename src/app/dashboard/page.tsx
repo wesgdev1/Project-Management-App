@@ -28,13 +28,13 @@ export default async function DashboardPage() {
   const projects = await loadProjects();
   console.log(projects);
   return (
-    <Container className="mt-10">
+    <Container className="mt-10 px-10 md:px-0">
       <HeaderDashboard />
-      <Grid columns="3" gap={"4"}>
+      <div className="grid md:grid-cols-3 gap-3">
         {projects.map((project) => {
           return <ProjectCard project={project} key={project.id} />;
         })}
-      </Grid>
+      </div>
     </Container>
   );
 }
