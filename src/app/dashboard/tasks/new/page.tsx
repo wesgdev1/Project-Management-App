@@ -29,16 +29,13 @@ export default function TaskNewPage() {
 
   const onSubmit = handleSubmit(async (data) => {
     if (!params.projectId) {
-      const res = await axios.post("http://localhost:3000/api/projects", data);
+      const res = await axios.post("/api/projects", data);
       if (res.status === 201) {
         router.push("/dashboard");
         router.refresh();
       }
     } else {
-      const res = await axios.put(
-        `http://localhost:3000/api/projects/${params.projectId}`,
-        data
-      );
+      const res = await axios.put(`/api/projects/${params.projectId}`, data);
       if (res.status === 200) {
         router.push("/dashboard");
         router.refresh();
@@ -47,9 +44,7 @@ export default function TaskNewPage() {
   });
 
   const handleDelete = async (ProjectId: string) => {
-    const res = await axios.delete(
-      `http://localhost:3000/api/projects/${ProjectId}`
-    );
+    const res = await axios.delete(`/api/projects/${ProjectId}`);
     if (res.status === 200) {
       toast.success("Project deleted");
       router.push("/dashboard");
@@ -59,13 +54,11 @@ export default function TaskNewPage() {
   useEffect(() => {
     console.log("por el efecct");
     if (params.projectId) {
-      const res = axios
-        .get(`http://localhost:3000/api/projects/${params.projectId}`)
-        .then((res) => {
-          console.log(res.data);
-          setValue("title", res.data.title);
-          setValue("description", res.data.description);
-        });
+      const res = axios.get(`/api/projects/${params.projectId}`).then((res) => {
+        console.log(res.data);
+        setValue("title", res.data.title);
+        setValue("description", res.data.description);
+      });
     }
   }, []);
 

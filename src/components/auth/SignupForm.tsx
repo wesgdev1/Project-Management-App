@@ -28,7 +28,7 @@ export const SignupForm = () => {
   const router = useRouter();
 
   const onSubmit = handleSubmit(async (data) => {
-    const res = await axios.post("http://localhost:3000/api/register", data);
+    const res = await axios.post("/api/register", data);
     console.log(res);
 
     if (res.status === 201) {
